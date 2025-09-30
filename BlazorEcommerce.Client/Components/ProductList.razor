@@ -1,7 +1,14 @@
-﻿@inject HttpClient Http
+﻿@using BlazorEcommerce.Client.Services.ProductService
+@inject IProductService ProductService
+
+@if (ProductService.Products == null || ProductService.Products.Count == 0)
+{
+    <span>Loading Products...</span>
+
+}else{
 
 <ul class="list-unstyled">
-    @foreach (var product in Products)
+    @foreach (var product in ProductService.Products)
     {
         <li class="media my-3">
             <div class="media-img-wrapper mr-2">
@@ -21,17 +28,12 @@
         </li>
     }
 </ul>
+}
 
-@code {
-    private static List<Product> Products = new List<Product>();
+@code {    
 
     protected override async Task OnInitializedAsync()
     {
-        var baseAddress = new Uri("https://localhost:7192/", UriKind.Absolute);        
-        var result = await Http.GetFromJsonAsync<List<Product>>(baseAddress.AbsoluteUri + "api/product");
-        if(result != null)
-        {
-            Products = result;
-        }
+        await ProductService.GetProducts();
     }
 }

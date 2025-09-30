@@ -1,9 +1,11 @@
 global using BlazorEcommerce.Shared;
 global using BlazorEcommerce.Data;
 global using Microsoft.EntityFrameworkCore;
+global using BlazorEcommerce.Services.ProductService;
+global using BlazorEcommerce.Client.Services.ProductService;
+global using BlazorEcommerce.Client.Components;
 using BlazorEcommerce.Client.Pages;
 using BlazorEcommerce.Components;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddScoped<BlazorEcommerce.Services.ProductService.IProductService, BlazorEcommerce.Services.ProductService.ProductService>();
+builder.Services.AddScoped<BlazorEcommerce.Client.Services.ProductService.IProductService, BlazorEcommerce.Client.Services.ProductService.ProductService>();
 
 // SQL Connection String:
 // Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
