@@ -1,0 +1,14 @@
+﻿@page "/product/{id:int}"
+@inject IProductService ProductService
+
+@code {
+    private Product product = null;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        product = ProductService.Products.Find(product => product.Id == Id);
+    }
+}
