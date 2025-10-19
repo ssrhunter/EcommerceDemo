@@ -12,9 +12,14 @@ namespace BlazorEcommerce.Shared
         public int Id { get; set; }        
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string Category { get; set; } = string.Empty;
+        //public string Category { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
+        public Category? Category { get; set; }
+        // set up a 2nd way of querying for the category based on
+        // foreign key. We also need this if we want to seed some data
+        // and we want to set up the category id for the product.
+        public int CategoryId { get; set; }
     }
 }
