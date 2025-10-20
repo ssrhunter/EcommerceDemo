@@ -6,11 +6,15 @@ namespace BlazorEcommerce.Client.Services.ProductService
     {
         private readonly HttpClient _http;
         private Uri baseAddress = new Uri("https://localhost:7192/", UriKind.Absolute);
+
         public ProductService(HttpClient http)
         {
             _http = http;
         }
         public List<Product> Products { get; set; } = new List<Product>();
+
+        // Event trigger for refreshing the products list.
+        public event Action ProductsChanged;
 
         public async Task<ServiceResponse<Product>> GetProduct(int productId)
         {
@@ -19,14 +23,21 @@ namespace BlazorEcommerce.Client.Services.ProductService
             return result;
         }
 
-        public async Task GetProducts()
+        public async Task GetProducts(string? categoryUrl = null)
         {
-            var requestURL = new Uri(baseAddress, "api/product");
+            var requestURL = categoryUrl == null
+                ? new Uri(baseAddress, "api/product")
+                : new Uri(baseAddress, $"api/product/category/{categoryUrl}");
             var result = await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>(requestURL);
             if (result != null && result.Data != null)
             {
                 Products = result.Data;
             }
+
+            // Tell every component that is subscribed to
+            // ProductsChanged that a change was made.
+            ProductsChanged.Invoke();
         }
+       
     }
 }

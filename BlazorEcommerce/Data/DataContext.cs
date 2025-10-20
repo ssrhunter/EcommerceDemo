@@ -12,6 +12,10 @@
         /// the Server project directory. 
         /// Ex: `dotnet ef migrations add Categories` to add a migration
         /// Ex: `dotnet ef database update` to update the database with the new migrations.
+        /// 
+        /// Entity Relationships:
+        /// https://learn.microsoft.com/en-us/ef/core/modeling/relationships
+        ///
         /// </summary>
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)

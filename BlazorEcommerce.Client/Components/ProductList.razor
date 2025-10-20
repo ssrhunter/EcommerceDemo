@@ -1,5 +1,6 @@
 ﻿@using BlazorEcommerce.Client.Services.ProductService
 @inject IProductService ProductService
+@implements IDisposable 
 
 @if (ProductService.Products == null || ProductService.Products.Count == 0)
 {
@@ -30,10 +31,19 @@
 </ul>
 }
 
-@code {    
+@code {
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await ProductService.GetProducts();
+        // Originally we were manually calling `await ProductService.GetProducts();`
+        // Now the page subscribes to ProductService updates.
+        // This triggers automatic page rerenders.
+        ProductService.ProductsChanged += StateHasChanged;
+    }
+
+    // cleanup, unsubscribe when the component is disposed.
+    public void Dispose()
+    {
+        ProductService.ProductsChanged -= StateHasChanged;
     }
 }

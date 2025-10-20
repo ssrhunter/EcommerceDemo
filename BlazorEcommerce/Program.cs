@@ -2,7 +2,10 @@ global using BlazorEcommerce.Shared;
 global using BlazorEcommerce.Data;
 global using Microsoft.EntityFrameworkCore;
 global using BlazorEcommerce.Services.ProductService;
+global using BlazorEcommerce.Services.CategoryService;
 global using BlazorEcommerce.Client.Services.ProductService;
+// Remember to add the client size services on the server because of the initial server side render.
+global using BlazorEcommerce.Client.Services.CategoryService;
 global using BlazorEcommerce.Client.Components;
 using BlazorEcommerce.Client.Pages;
 using BlazorEcommerce.Components;
@@ -21,6 +24,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 builder.Services.AddScoped<BlazorEcommerce.Services.ProductService.IProductService, BlazorEcommerce.Services.ProductService.ProductService>();
 builder.Services.AddScoped<BlazorEcommerce.Client.Services.ProductService.IProductService, BlazorEcommerce.Client.Services.ProductService.ProductService>();
+builder.Services.AddScoped<BlazorEcommerce.Services.CategoryService.ICategoryService, BlazorEcommerce.Services.CategoryService.CategoryService>();
+builder.Services.AddScoped<BlazorEcommerce.Client.Services.CategoryService.ICategoryService, BlazorEcommerce.Client.Services.CategoryService.CategoryService>();
+
 
 // SQL Connection String:
 // Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
@@ -42,7 +48,6 @@ builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
-app.UseSwaggerUI();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -56,11 +61,19 @@ else
     app.UseHsts();
 }
 
+app.UseStaticFiles();
+
+// Really strange, but I had to add this to stop the
+// favicon from being routed to the /api routes.
+// UseRouting() needs to come after UseStaticFiles().
+app.UseRouting();
+
+app.UseSwaggerUI();
+
 app.UseSwagger();
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()

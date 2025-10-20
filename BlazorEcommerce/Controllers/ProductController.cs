@@ -7,11 +7,11 @@ namespace BlazorEcommerce.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {        
-        private readonly Services.ProductService.IProductService _productService;
+        private readonly Services.ProductService.IProductService _productService;        
 
         public ProductController(Services.ProductService.IProductService productService)
         {            
-            _productService = productService;
+            _productService = productService;            
         }
 
         [HttpGet]
@@ -28,5 +28,11 @@ namespace BlazorEcommerce.Controllers
             return Ok(result);
         }
 
+        [HttpGet("category/{categoryUrl}")]
+        public async Task<ActionResult<ServiceResponse<Product>>> GetProductsByCategory(string categoryUrl)
+        {
+            var result = await _productService.GetProductsByCategory(categoryUrl);
+            return Ok(result);
+        }
     }
 }
